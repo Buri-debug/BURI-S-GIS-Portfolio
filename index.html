@@ -463,5 +463,22 @@
             </div>
         </div>
     </footer>
+    <script>
+  const burger = document.querySelector('.hamburger');
+  const menu = document.querySelector('.nav-menu');
+
+  burger?.addEventListener('click', () => {
+    menu?.classList.toggle('active');
+    document.body.classList.toggle('no-scroll');
+  });
+
+  // Close menu when clicking a link
+  document.querySelectorAll('.nav-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      menu?.classList.remove('active');
+      document.body.classList.remove('no-scroll');
+    });
+  });
+</script>
 </body>
 </html>
