@@ -1504,75 +1504,93 @@ img, video, iframe {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
   }
 }
-/* ===== Final Mobile Hero Visibility Patch ===== */
+/* ===== Compact Mobile Navbar + Hero Offset ===== */
 
-/* 1) Define a header height we can use for offsets */
-:root {
-  --header-height: 80px;
-}
+/* Default header height */
+:root { --header-height: 80px; }
 
+/* Smaller header on tablets/phones */
 @media (max-width: 768px) {
-  :root { --header-height: 96px; }
+  :root { --header-height: 56px; }
 }
 
-/* 2) Hero: ensure proper stacking and spacing below fixed navbar */
+/* Even smaller on very small phones */
+@media (max-width: 480px) {
+  :root { --header-height: 52px; }
+}
+
+/* Compact navbar sizing */
+.navbar {
+  block-size: var(--header-height);
+  padding-block: 0.25rem; /* override previous large padding */
+  padding-top: max(0.25rem, env(safe-area-inset-top)); /* safe area on iOS */
+  border-bottom: 1px solid rgba(0, 212, 170, 0.2);
+}
+
+/* Make inner container fill the header height */
+.nav-container {
+  min-block-size: 100%;
+  align-items: center;
+}
+
+/* Tighten logo sizing on mobile */
+@media (max-width: 768px) {
+  .nav-logo a {
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+    line-height: 1; /* prevent header from growing */
+  }
+  .nav-logo a::after { /* spinning globe */
+    font-size: 1rem;
+    top: -2px;
+  }
+}
+
+/* Compact hamburger */
+@media (max-width: 768px) {
+  .hamburger { width: 28px; height: 22px; }
+  .bar { height: 3px; width: 100%; }
+}
+
+/* Slide-in menu should start just below the shorter header */
+@media (max-width: 768px) {
+  .nav-menu {
+    top: calc(var(--header-height) + env(safe-area-inset-top));
+  }
+}
+
+/* Ensure hero clears the fixed header and stays visible */
 .hero {
+  padding-top: calc(var(--header-height) + env(safe-area-inset-top) + 8px);
+  isolation: isolate;        /* overlays stay behind */
   position: relative;
-  isolation: isolate;            /* keeps overlays behind content */
-  min-height: 100svh;            /* stable mobile viewport */
-  padding-top: calc(var(--header-height) + env(safe-area-inset-top));
-  display: grid;
-  align-content: center;         /* center the content after padding */
+  min-height: 100svh;
 }
-
-/* 3) Keep decorative overlay behind */
-.hero::before {
-  z-index: 0;                    /* background effect layer */
-  pointer-events: none;
-}
-
-/* 4) Ensure text content sits on top of everything */
+.hero::before { z-index: 0; }
 .hero-container,
 .hero-content,
-.hero-title {
-  position: relative;
-  z-index: 2;                    /* above overlay and images */
-}
+.hero-title { position: relative; z-index: 2; }
 
-/* 5) If a side image/card exists, keep it under the text on mobile */
-.hero-image,
-.profile-card {
-  position: relative;
-  z-index: 1;                    /* below .hero-content/.hero-title */
-}
-
-/* 6) Robust mobile layout: force single column and content above image */
+/* One-column hero on phones to avoid side image overlapping the title */
 @media (max-width: 768px) {
   .hero-container {
     display: grid;
     grid-template-columns: 1fr !important;
-    grid-template-areas:
-      "content"
-      "image";
-    gap: 1.75rem;
+    gap: 1.5rem;
     text-align: center;
   }
-  .hero-content { grid-area: content; }
-  .hero-image   { grid-area: image; }
 }
 
-/* 7) Fluid, readable title and guaranteed contrast */
+/* Fluid, readable hero title */
 .hero-title {
   font-size: clamp(2rem, 6vw, 4rem);
   line-height: 1.15;
+  margin: 0;
   color: #e2e8f0;
-  margin-top: 0;
-  text-shadow:
-    0 0 10px rgba(0,0,0,0.35),
-    0 0 20px rgba(0, 212, 170, 0.25);
+  text-shadow: 0 0 12px rgba(0,0,0,0.35);
 }
 
-/* 8) Subtitle won’t push layout or hide the title on small screens */
+/* Typewriter subtitle shouldn't push layout on mobile */
 @media (max-width: 768px) {
   .hero-subtitle {
     font-size: clamp(1rem, 3.8vw, 1.3rem);
@@ -1584,11 +1602,7 @@ img, video, iframe {
   }
 }
 
-/* 9) Hidden mobile menu must not cover hero when closed */
-@media (max-width: 768px) {
-  .nav-menu { pointer-events: none; }
-  .nav-menu.active { pointer-events: auto; }
+/* Anchor jumps should not land under the fixed header */
+#home, #about, #skills, #projects, #contact {
+  scroll-margin-top: calc(var(--header-height) + 12px);
 }
-
-/* 10) Safety: prevent any media from causing horizontal scroll */
-img, video, iframe { max-width: 100%; height: auto; }

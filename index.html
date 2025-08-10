@@ -480,5 +480,15 @@
     });
   });
 </script>
+<script>
+  const header = document.querySelector('.navbar');
+  function setHeaderVar() {
+    if (!header) return;
+    const h = header.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--header-height', h + 'px');
+  }
+  window.addEventListener('load', setHeaderVar);
+  window.addEventListener('resize', setHeaderVar);
+</script>
 </body>
 </html>
