@@ -1344,3 +1344,108 @@ body::before {
     margin: 0 10px;
   }
 }
+/* ===== Mobile & Accessibility Fixes (paste at the bottom) ===== */
+
+/* Prevent iOS auto-zoom and respect safe areas */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+.navbar {
+  padding-top: calc(1rem + env(safe-area-inset-top));
+}
+
+/* Real mobile viewport and anchor offset for fixed navbar */
+.hero {
+  min-height: 100svh;
+  scroll-margin-top: 90px;
+}
+
+/* Fluid typography that scales across devices */
+.hero-title {
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+.section-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+.hero-description {
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
+}
+
+/* Make the typewriter line mobile-safe */
+@media (max-width: 768px) {
+  .hero-subtitle {
+    font-size: clamp(1rem, 3.8vw, 1.3rem);
+    width: auto;
+    white-space: normal;
+    border-right: none;
+    animation: none;
+    overflow: visible;
+  }
+}
+
+/* Ensure media never overflows on narrow screens */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile navigation: slide-in menu + body lock when open */
+@media (max-width: 768px) {
+  .nav-menu {
+    position: fixed;
+    left: -100%;
+    top: calc(70px + env(safe-area-inset-top));
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 15, 35, 0.98);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 1.25rem 4rem;
+    gap: 1.5rem;
+    transition: left 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+  }
+  .nav-menu.active { left: 0; }
+  body.no-scroll {
+    overflow: hidden;
+    touch-action: none;
+  }
+}
+
+/* Grids that never cause side scrolling */
+@media (max-width: 768px) {
+  .hero-container,
+  .about-content,
+  .skills-grid,
+  .projects-grid,
+  .contact-content,
+  .footer-content {
+    grid-template-columns: 1fr !important;
+    gap: 1.75rem;
+  }
+  .projects-grid {
+    /* Avoid too-wide min cards on small screens */
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Softer visuals on very small screens */
+@media (max-width: 480px) {
+  .container { padding: 0 14px; }
+  .btn { padding: 14px 22px; font-size: 0.95rem; }
+  .project-card, .contact-form, .skill-category, .contact-item { 
+    padding: 1.25rem; 
+  }
+  .project-card { margin: 0; }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
