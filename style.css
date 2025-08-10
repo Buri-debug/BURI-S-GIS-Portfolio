@@ -1504,3 +1504,91 @@ img, video, iframe {
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
   }
 }
+/* ===== Final Mobile Hero Visibility Patch ===== */
+
+/* 1) Define a header height we can use for offsets */
+:root {
+  --header-height: 80px;
+}
+
+@media (max-width: 768px) {
+  :root { --header-height: 96px; }
+}
+
+/* 2) Hero: ensure proper stacking and spacing below fixed navbar */
+.hero {
+  position: relative;
+  isolation: isolate;            /* keeps overlays behind content */
+  min-height: 100svh;            /* stable mobile viewport */
+  padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+  display: grid;
+  align-content: center;         /* center the content after padding */
+}
+
+/* 3) Keep decorative overlay behind */
+.hero::before {
+  z-index: 0;                    /* background effect layer */
+  pointer-events: none;
+}
+
+/* 4) Ensure text content sits on top of everything */
+.hero-container,
+.hero-content,
+.hero-title {
+  position: relative;
+  z-index: 2;                    /* above overlay and images */
+}
+
+/* 5) If a side image/card exists, keep it under the text on mobile */
+.hero-image,
+.profile-card {
+  position: relative;
+  z-index: 1;                    /* below .hero-content/.hero-title */
+}
+
+/* 6) Robust mobile layout: force single column and content above image */
+@media (max-width: 768px) {
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "content"
+      "image";
+    gap: 1.75rem;
+    text-align: center;
+  }
+  .hero-content { grid-area: content; }
+  .hero-image   { grid-area: image; }
+}
+
+/* 7) Fluid, readable title and guaranteed contrast */
+.hero-title {
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1.15;
+  color: #e2e8f0;
+  margin-top: 0;
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.35),
+    0 0 20px rgba(0, 212, 170, 0.25);
+}
+
+/* 8) Subtitle won’t push layout or hide the title on small screens */
+@media (max-width: 768px) {
+  .hero-subtitle {
+    font-size: clamp(1rem, 3.8vw, 1.3rem);
+    width: auto;
+    white-space: normal;
+    border-right: none;
+    animation: none;
+    overflow: visible;
+  }
+}
+
+/* 9) Hidden mobile menu must not cover hero when closed */
+@media (max-width: 768px) {
+  .nav-menu { pointer-events: none; }
+  .nav-menu.active { pointer-events: auto; }
+}
+
+/* 10) Safety: prevent any media from causing horizontal scroll */
+img, video, iframe { max-width: 100%; height: auto; }
