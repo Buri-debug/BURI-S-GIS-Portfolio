@@ -1449,3 +1449,58 @@ img, video, iframe {
     scroll-behavior: auto !important;
   }
 }
+/* Ensure hero content sits above decorative overlays */
+.hero {
+  position: relative;
+  isolation: isolate; /* creates a new stacking context */
+  min-height: 100svh; /* stable mobile viewport height */
+  padding-top: calc(96px + env(safe-area-inset-top)); /* clear fixed navbar on phones */
+}
+
+.hero::before {
+  z-index: 0; /* background effect stays behind */
+}
+
+.hero-container,
+.hero-content,
+.hero-title {
+  position: relative;
+  z-index: 1; /* content above ::before and any image layers */
+}
+
+/* Fluid, readable title size on small screens */
+.hero-title {
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1.15;
+  color: #e2e8f0; /* ensure visible on dark gradient */
+  text-shadow: 0 0 20px rgba(0, 212, 170, 0.25);
+}
+
+/* If your hero has an image/card beside it, keep it under the text on mobile */
+.hero-image,
+.profile-card {
+  position: relative;
+  z-index: 0;
+}
+
+/* Prevent the off‑canvas menu from covering the hero when closed */
+@media (max-width: 768px) {
+  .nav-menu {
+    pointer-events: none; /* no overlay hitbox when hidden */
+  }
+  .nav-menu.active {
+    pointer-events: auto;
+  }
+
+  /* Extra padding in case your header is taller on mobile */
+  .hero {
+    padding-top: calc(110px + env(safe-area-inset-top));
+  }
+}
+
+/* If the title still looks faint on some devices, give it stronger contrast on very small screens */
+@media (max-width: 480px) {
+  .hero-title {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
+  }
+}
