@@ -1310,7 +1310,6 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
-  loading: lazy; /* Note: loading="lazy" is HTML attribute, put that in your img tags */
 }
 
 /* 2. Navigation - hamburger menu (basic) */
