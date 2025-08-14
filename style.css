@@ -1304,3 +1304,50 @@ body::before {
 section {
   scroll-margin-top: 80px;
 }
+/* Make everything fluid */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent sideways scrolling */
+}
+
+/* Images scale to fit */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* General container */
+.container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 15px;
+  margin: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-section img {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+}
